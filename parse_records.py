@@ -14,6 +14,12 @@ def find(v, f):
 def htmlbase(url):
     return url.split('/')[-1].replace('.html','')
 
+def trycol(row, col):
+    try:
+        return row[col]
+    except TypeError:
+        return ''
+
 def main():
     athletes = glob('www.sports-reference.com/olympics/athletes/??/*.html')
 
@@ -34,7 +40,9 @@ def main():
                     'phase': find(header, lambda x: x == 'Phase'),
                     'rank': find(header, lambda x: x == 'Rank'),
                     'misc': find(header, lambda x: x == 'None'),
-                    'time': find(header, lambda x: x == 'T' or x == 'T(A)'),
+                    'time': find(header, lambda x: x == 'T'),
+                    'timea': find(header, lambda x: x.startswith('T(A')),
+                    'timeh': find(header, lambda x: x.startswith('T(H')),
                     'distance': find(header, lambda x: x == 'D')
                     }
 
@@ -50,25 +58,16 @@ def main():
                 age = row[cols['age']]
                 phase = row[cols['phase']]
 
-                try:
-                    rank = row[cols['rank']]
-                except:
-                    rank = ''
+                rank = trycol(row, cols['rank'])
+                misc = trycol(row, cols['misc'])
 
-                try:
-                    misc = row[cols['misc']]
-                except TypeError:
-                    misc = ''
+                time = trycol(row, cols['time'])
+                if not time:
+                    time = trycol(row, cols['timea'])
+                if not time:
+                    time = trycol(row, cols['timeh'])
 
-                try:
-                    time = row[cols['time']]
-                except TypeError:
-                    time = ''
-
-                try:
-                    distance = row[cols['distance']]
-                except TypeError:
-                    distance = ''
+                distance = trycol(row, cols['distance'])
 
                 records.write( "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" % (year, htmlbase(athlete), age, phase, htmlbase(phase.href), rank, misc, time, distance))
 
