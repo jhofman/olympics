@@ -1,0 +1,3 @@
+#!/bin/bash
+
+wget -mkr -l 2 -np -w 3 --random-wait http://www.sports-reference.com/olympics/sports/

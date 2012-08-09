@@ -1,0 +1,10 @@
+#!/bin/bash
+
+file=$1
+
+for url in `cut -f7 $file | sort | uniq | grep -v '^$'`
+do 
+    file=`echo $url | sed 's_^http://__'`
+    [ -f $file ] || wget -mkr -l 1 -np $url
+    # sleep 1
+done
