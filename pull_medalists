@@ -1,6 +1,23 @@
 #!/bin/bash
+#
+# file: pull_medalists
+#
+# description: downloads 
+#
+# usage: ./pull_medalists <medalists.tsv>
+#
+# requirements: wget
+#
+# author: jake hofman (gmail: jhofman)
+#
 
-file=$1
+if [ $# -lt 1 ]
+then
+    echo "usage: ./pull_medalists <medalists.tsv>"
+    exit 1
+else
+    file=$1
+fi
 
 for url in `cut -f7 $file | sort | uniq | grep -v '^$'`
 do 

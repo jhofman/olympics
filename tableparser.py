@@ -1,8 +1,29 @@
 #!/usr/bin/env python
+#
+# file: tableparser.py
+#
+# description: helper class to scrape html table data
+#
+# usage:
+#
+#  import tableparser
+#
+#  tree = etree.parse(html, etree.HTMLParser())
+#  tp = tableparser(tree.xpath('.//table[@id="table-id"]'))
+#  for row in tp.rows():
+#    print row
+#
+# requirements: lxml
+#
+# author: jake hofman (gmail: jhofman)
+#
 
 from lxml import etree
 import re
 
+
+# simple class to hold hypertext data including possible text, an
+# href, and/or an img
 class hypertext:
     def __init__(self, text='', href='', img=''):
         self.text = text
