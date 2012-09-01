@@ -15,6 +15,7 @@ from glob import glob
 import codecs
 from lxml import etree
 from tableparser import tableparser
+import re
 
 def find(v, f):
     try:
@@ -63,6 +64,8 @@ def main():
             except:
                 pass
 
+            rx_trailing_chars = re.compile(r'(w|est|west)$')
+                
             for row in tp.rows():
 
                 year = str(row[cols['games']]).split(' ')[0]
@@ -78,8 +81,11 @@ def main():
                 if not time:
                     time = trycol(row, cols['timeh'])
 
+                if time:
+                    time = rx_trailing_chars.sub('', time)
+                    
                 distance = trycol(row, cols['distance'])
-
+                
                 records.write( "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" % (year, htmlbase(athlete), age, phase, htmlbase(phase.href), rank, misc, time, distance))
 
     return 0

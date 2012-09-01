@@ -2,7 +2,7 @@
 #
 # file: pull_medalists
 #
-# description: downloads 
+# description: downloads athlete pages for medalists
 #
 # usage: ./pull_medalists <medalists.tsv>
 #
@@ -19,9 +19,6 @@ else
     file=$1
 fi
 
-for url in `cut -f7 $file | sort | uniq | grep -v '^$'`
-do 
-    file=`echo $url | sed 's_^http://__'`
-    [ -f $file ] || wget -mkr -l 1 -np $url
-    # sleep 1
-done
+cut -f7 $file | \
+    sort | uniq | grep '.html$' | \
+    xargs wget -mkr -l 1 -np -N
