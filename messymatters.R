@@ -54,7 +54,7 @@ finals <- merge(finals, medalists, by=c('event','athlete.id','year'))
 
 
 
-# plot percent slower than best time for men's track
+# plot percent slower than current gold for men's track
 events <- c('mens-100-metres',
             'mens-800-metres',
             'mens-1500-metres')
@@ -78,7 +78,7 @@ ggsave(p, file='figures/mens_track_percent_slower_by_year.png', width=8, height=
 p
 
 
-# plot percent slower than best time for men's swimming
+# plot percent slower than current gold for men's swimming
 events <- c('mens-100-metres-freestyle',
             'mens-200-metres-butterfly',
             'mens-400-metres-individual-medley')
@@ -102,7 +102,7 @@ ggsave(p, file='figures/mens_swimming_percent_slower_by_year.png', width=8, heig
 p
 
 
-# plot medalist speeds by year
+# plot men's and women's medalist speeds by year for track events
 events.unisex <- c('100-metres',
                    '200-metres',
                    '400-metres',
@@ -130,7 +130,7 @@ men.vs.women <- merge(golds, golds,
 men.vs.women <- subset(men.vs.women, sex.men=='men' & sex.women=='women')
 men.vs.women <- transform(men.vs.women, male.female.ratio=mph.men/mph.women)
 
-# male.female.ratio for each track event
+# plot male.female.ratio for each track event
 events.unisex <- c('100-metres',
                    '800-metres',
                    '1500-metres')
@@ -144,45 +144,4 @@ p <- p + ylab('Relative speed\n(men to women)')
 p <- p + opts(axis.text.x=theme_text(angle=45, hjust=1, vjust=1))
 ggsave(p, file='figures/track_men_vs_women_by_year.png', width=8, height=2)
 p
-
-# plot percent slower than best time for men's track
-events <- c('mens-100-metres',
-            'mens-800-metres',
-            'mens-1500-metres')
-plot.data <- subset(finals, event %in% events & rank==1)
-plot.data <- ddply(plot.data, "event", function(df) {
-  df <- df[order(df$year),]
-  percent.improvement <- exp(diff(log(df$sec)))-1
-  cbind(df[2:nrow(df),], percent.improvement)
-})
-
-plot.data <- transform(plot.data, event=reorder(event, meters))
-p <- ggplot(data=plot.data, aes(x=year, y=percent.slower, color=rank))
-p <- p + geom_point()
-#p <- p + geom_smooth(method="lm", formula=y ~ poly(x,2), alpha=0.1)
-p <- p + scale_y_continuous(labels=percent_format())
-p <- p + scale_colour_manual(values=c("#FFD700", "#BFC1C2", "#C9AE5D"))
-p <- p + facet_wrap(~ event, ncol=3)
-p <- p + opts(legend.position="none")
-p <- p + xlab('') + ylab('Percent slower than fastest time')
-p
-
-
-# modeled percent improvement
-year.min <- 1948
-model.data <- subset(finals, event=='mens-100-metres-freestyle' & rank == 1 & year >= year.min)
-model <- lm(I(log(sec)) ~ 1 + I(year-2012) + I((year-2012)^2), data=model.data)
-#model <- lm(I(log(sec)) ~ 1 + I(year-2012), data=model.data)
-model.data$sec.predicted <- exp(model$fitted.values)
-model.data <- model.data[order(model.data$year),]
-percent.improvement <- exp(-diff(log(model.data$sec.predicted)))-1
-model.data$percent.improvement <- c(NA, percent.improvement)
-model
-
-p <- ggplot(data=model.data, aes(x=year, y=sec))
-p <- p + geom_point()
-p <- p + geom_line(aes(x=year, y=sec.predicted))
-p
-
-
 
