@@ -1,4 +1,4 @@
-code to scrape and analyze olympics data from sports-reference.com. run messymatters.sh to scrape data and generate plots for [the messymatters blog post](http://messymatters.com/olympic-records).
+code to scrape and analyze olympics data from sports-reference.com. run messymatters.sh to scrape data and generate plots for [the messymatters blog post](http://messymatters.com/olympics).
 
 *   pull_sports.sh:
 	downloads html medal summaries for all sports and events
@@ -44,6 +44,6 @@ code to scrape and analyze olympics data from sports-reference.com. run messymat
 
 	produces `records.tsv` containing
 
-		2012	usain-bolt-1	25	Final	mens-100-metres-final	1	None	9.63	
-		2012	yohan-blake-1	22	Final	mens-100-metres-final	2	None	9.75	
-		2012	justin-gatlin-1	30	Final	mens-100-metres-final	3	None	9.79	
+		2012	usain-bolt-1	25	Final	mens-100-metres-final	1	None	9.63
+		2012	yohan-blake-1	22	Final	mens-100-metres-final	2	None	9.75
+		2012	justin-gatlin-1	30	Final	mens-100-metres-final	3	None	9.79
